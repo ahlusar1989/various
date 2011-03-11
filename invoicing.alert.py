@@ -34,7 +34,7 @@ for i in range(inbox.Messages.Count):
                     print fields
         
 
-me = 'farringtonni@grouphc.net'
+me = 'user@domain.net'
 header = 'To:%s \nFrom: %s\n' % (me, me) 
 if inv and invok:
     header += 'Subject:Invoicing Routine SUCCESS \n'
@@ -48,7 +48,7 @@ else:
         msg = header + '\n There was no email confirmation from Biztalk \n\n'
 
 try:
-    server = smtplib.SMTP('GBRNonAuthSMTP1.grouphc.net') 
+    server = smtplib.SMTP('GBRNonAuthSMTP1.domain.net') 
 except:
     pass
 
