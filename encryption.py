@@ -59,5 +59,5 @@ if __name__ == '__main__':
     private, public = generate_RSA()
 
     encrypted = encrypt_RSA(public, message)
-    decrypted = decrypt_RSA(private, message)
+    decrypted = decrypt_RSA(private, encrypted)
     assert decrypted == message
