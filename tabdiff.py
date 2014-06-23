@@ -2,7 +2,7 @@ import os, subprocess
 import adodbapi
 
 # constants
-LOGIN, SECRET = 'sapadmin', 'S4p4dmin',
+LOGIN, SECRET = 'sapadmin', 'sapadmin',
 SOURCESERVER = 'GBRSDHEID0001'
 SOURCEDB = 'COIS'
 TARGETSERVER = 'GBRCL18964'
