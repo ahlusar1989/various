@@ -1,0 +1,22 @@
+{
+
+"name": "Cement",
+"version": "2.5",
+
+"manifest_version": 2,
+
+// Give it a useful description
+"description": "Style for HeidelbergCement.",
+
+"content_scripts": [ {
+"all_frames": true,
+
+// The name of the CSS file (packaged with your extension) to inject
+"css": [ "css/custom.css" ],
+
+
+// The sites on which to inject the CSS
+"matches": [ "https://gercas.heidelbergcement.com/*"]
+} ]
+}
+

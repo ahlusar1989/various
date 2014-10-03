@@ -1,0 +1,32 @@
+#tblMain > tbody > tr:nth-child(1) > td > img {
+  display: none !important;
+}
+
+#tblMain > tbody > tr:nth-child(3) > td > img {
+  display: none !important;
+}
+
+img#imgLogo {
+  display: block;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background: url(http://openvz.org/images/thumb/a/af/LinuxWorld_logo.gif/180px-LinuxWorld_logo.gif) no-repeat !important;
+  height: 50px;
+  width: 180px;
+  padding-left: 180px; /* Equal to width of new image */
+}
+
+td#mdLft
+{
+  display:none;
+}
+td#mdRt
+{
+  display:none;
+}
+td#mdMid
+{
+	padding:0px 45px;
+	background: #22698B !important;  
+	vertical-align: top;
+}
