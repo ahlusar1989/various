@@ -1,0 +1,252 @@
+<template name="alert">
+    {{#if alert }}
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        {{alert}}
+    </div>
+    {{/if}} 		
+</template>
+
+<!-- Authentication -->
+<template name="signIn">
+{{#unless currentUser}}
+  <div class="account-wall">
+      {{>alert}}
+      <img class="profile-img img-circle" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120" alt="">
+      <form action="/signin" class="sign-in-form" id="signInForm" method="post">
+        <input class="email form-control" id="signInEmail" type="text" name="email" placeholder="Email Address" required autofocus>
+        <input class="password form-control" id="signInPassword" type="password" name="password" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <label class="checkbox pull-left"><input type="checkbox" value="remember-me">Remember me</label>
+        <a href="/help" class="pull-right need-help">Need help? </a><span class="clearfix"></span>
+      </form>
+      <a href="javascript:void(0);" class="text-center show-forgot-password new-account" id="showForgotPassword">Forgot Password</a>
+      <a href="/signUp" class="text-center new-account">Create an account </a>
+  </div>
+{{/unless}}
+</template>
+
+<template name="signOut">
+{{#if currentUser}}
+    <div class="connected">
+        <span class="welcome">Welcome</span>
+        <a class="sign-out" href="/" id="signOut">Sign Out</a>
+    </div>
+{{/if}}
+</template>
+
+<template name="signUp">
+{{#unless currentUser}}
+    <div class="sign-up well">
+      <form action="/sign-up" class="sign-up-form" id="signUpForm" method="post">
+        <h4>Sign-up</h4>
+        <div class="input-group text-center">
+          <input type="text" class="form-control input-lg" title="Don't worry. We hate spam, and will not share your email with anyone." placeholder="Enter your email address">
+          <span class="input-group-btn"><button class="btn btn-lg btn-primary" type="button">OK</button></span>
+        </div>
+      </form>
+    </div><!--/well-->
+    {{> alert}}
+{{/unless}}
+</template>
+
+<template name="forgotPassword">
+{{#if showForgotPassword}}
+    <div class="forgot-password" id="forgotPassword">
+        <a class="return-to-sign-in" href="javascript:void(0);" id="returnToSignIn">Return</a>
+        <form action="/forgot" class="forgot-password-form" id="forgotPasswordForm" method="post">
+            <input class="email" id="forgotPasswordEmail" type="text" name="email" placeholder="Email Address">
+            <input class="btn btn-large btn-warning btn-submit" type="submit" value="Send">
+        </form>
+    </div>
+{{/if}}
+</template>
+
+<template name="resetPassword">
+{{#if resetPassword}}
+    <div class="reset-password">
+        <h2 class="headline">You're now saved, <span class="bold">follow the light!</span></h2>
+        <h3 class="details">You just have to type and confirm  your new password to regain access to your dashboard.</h3>
+        <form action="/reset-password" class="reset-password-form" id="resetPasswordForm" method="post">
+            <input class="password" id="resetPasswordPassword" name="password" placeholder="Your New Password" type="password" >
+            <input class="password-confirm" id="resetPasswordPasswordConfirm" name="password-confirm" placeholder="Confirm New Password" type="password" >
+            <input class="btn-warning btn-lg btn-submit" type="submit" value="Reset">
+        </form>
+    </div>
+{{/if}}
+</template>
+
+<!-- Projects -->
+<template name="projects">
+  {{#if SHOWPROJECTFORM}}
+    {{>projectForm}}
+  {{/if}}
+  <div class="container-fluid">
+      <div class="row-fluid">
+          <div class="page-header">
+            <h1>Project <small>List</small></h1>
+          </div>
+          <button class="btn btn-large btn-success addProject">
+            Add Project
+          </button>
+          <table class="table table-bordered table-striped table-hover">
+              <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Client</th>
+                      <th>Due Date</th>
+                      <th>Status</th>
+                      <th>Owner</th>
+                  </tr>
+              </thead>
+              <tbody>
+              {{#each projectList}}
+                {{>projectRow}}
+              {{/each}}
+              </tbody>
+          </table>
+      </div>
+  </div>
+</template>
+
+<template name="projectRow">
+    <tr class="projectRow">
+      <td>{{name}}</td>
+      <td>{{client}}</td>
+      <td>{{formatDate datedue}}</td>
+      <td>{{status}}</td>
+      <td>{{owner.name}}</td>
+    </tr>
+</template>
+
+<template name="projectForm">
+    <div class="modal-backdrop fade in"></div>
+    <div class="modal show">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">
+                    {{#if editing_project}}
+                      Update Project
+                    {{else}}
+                      Add Project
+                    {{/if}}
+                    </h4>
+                </div>
+                <div class="modal-body">
+
+                  <div class="input-group text-center">
+                    <label for="name">Name:</label>
+                    <input type="text" class="input input-xlarge name" name="name" value="{{project.name}}" id="name">
+                    <!--span class="input-group-btn"><button class="btn btn-lg btn-primary" type="button">OK</button></span-->
+                  </div>
+
+                  <div class="input-group text-center">
+                    <label for="client">Client:</label>
+                    <input class="input input-xlarge client" type="text" name="client" value="{{project.client}}" id="client">
+                  </div>
+
+                  <div class="input-group text-center">
+                    <label>Status</label>
+                    <select class="status" name="status" id="status">
+                      <option value="OnHold">On Hold</option>
+                      <option value="Active">Active</option>
+                    </select>
+                  </div>
+
+                  <div class="input-group text-center">
+                    <label for="date_due">Date Due</label>
+                    <input class="datedue" type="date" name="date_due" value="{{project.datedue}}" id="date_due"><br/>
+                  </div>
+
+                  <div class="input-group text-center">
+                    <label>Owner</label>
+                    <select class="owner form-control" name="owner" id="owner">
+                      {{#each employees}}
+                      <option value="{{_id}}">{{name}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+
+                </div>
+                <div class="modal-footer">
+                  {{#if editing_project}}
+                    <button type="button" class="btn btn-danger remove">Delete</button>
+                  {{/if}}
+                  <button type="button" class="btn btn-success save">Save</button>
+                  <button type="button" class="btn btn-default cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<!-- Projects -->
+
+<!-- Employees -->
+<template name="employees">
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="page-header">
+        <h1>Employee <small>List</small></h1>
+      </div>
+      <button class="btn btn-large btn-success addEmployee" data-toggle="modal" data-target="#employeeForm">Add Employee</button>
+      <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each employeeList}}
+            {{>employeeRow}}
+            {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {{#if SHOWEMPLOYEEFORM}}
+    {{>employeeForm}}
+  {{/if}}
+
+</template>
+
+<template name="employeeRow">
+  <tr class="employeeRow">
+    <td>{{name}}</td>
+  </tr>
+</template>
+
+<template name="employeeForm">
+    <div class="modal-backdrop fade in"></div>
+    <div class="modal show">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">
+                    {{#if editing_employee}}
+                      Update Employee
+                    {{else}}
+                      Add Employee
+                    {{/if}}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                  <label for="name">Name</label>
+                  <input class="input input-xlarge name" type="text" name="name" value="{{employee.name}}" id="name">
+                </div>
+                <div class="modal-footer">
+                  {{#if editing_employee}}
+                    <button type="button" class="btn btn-danger remove">Delete</button>
+                    <button type="submit" class="btn btn-primary save">Update</button>
+                  {{else}}
+                    <button type="button" class="btn btn-success save">Save</button>
+                  {{/if}}
+                  <button type="button" class="btn btn-default cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<!-- Employees -->
