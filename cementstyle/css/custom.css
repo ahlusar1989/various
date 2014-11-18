@@ -30,3 +30,18 @@ td#mdMid
 	background: #22698B !important;  
 	vertical-align: top;
 }
+
+SELECT, INPUT, TEXTAREA, BUTTON, LABEL {
+  font-size: 100% !important;
+  font-family: Courier New, Sans Serif, Arial !important;
+}
+
+DIV.PlainText {
+  font-size: 80% !important;
+  font-family: Courier New, Sans Serif, Arial !important;
+}
+
+TD, TH {
+  font-size: 70% !important;
+  font-family: Courier New, Sans Serif, Arial !important;
+}
