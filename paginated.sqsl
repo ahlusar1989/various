@@ -1,0 +1,55 @@
+ALTER procedure [dbo].[paginated]
+  @tablename varchar(200) -- or a subquery, or view
+ ,@orderBy varchar(200)
+ ,@fieldlist varchar(200) = '*'
+ ,@filter varchar(200) = ''
+ ,@pageNum int = 1
+ ,@pageSize int = 25
+ ,@totalPages int OUTPUT
+AS
+  SET NOCOUNT ON
+  DECLARE
+     @STMT nvarchar(max)         -- SQL to execute
+    ,@rows int                   -- total # of records (for GridView paging interface)
+
+  IF LTRIM(RTRIM(@filter)) = '' SET @filter = '1 = 1'
+  IF LTRIM(RTRIM(@orderBy)) = '' SET @orderBy = @fieldlist
+
+  BEGIN
+
+    SET @STMT =  'SELECT   @rows = COUNT(*) FROM ' + @tablename + ' WHERE ' + @filter
+
+    EXEC sp_executeSQL @STMT, @params = N'@rows INT OUTPUT', @rows = @rows OUTPUT
+    --SELECT @rows AS recct       -- return the total # of records
+
+	SET @totalPages = @rows / @pageSize
+
+    DECLARE
+      @lbound int,
+      @ubound int
+
+    SET @pageSize = ABS(@pageSize)
+    IF @pageNum < 1 
+       SET @pageNum = (@rows / @pageSize) - @pageNum
+
+    SET @lbound = ((@pageNum - 1) * @pageSize)
+    SET @ubound = @lbound + @pageSize + 1
+
+    IF @lbound >= @rows BEGIN
+      SET @ubound = @rows + 1
+      SET @lbound = @ubound - (@pageSize + 1) -- return the last page of records if                                               
+                                              -- no records would be on the
+                                              -- specified page
+    END
+
+    SET @STMT =  'SELECT  ' + @fieldlist + '
+                  FROM    (
+                            SELECT  ROW_NUMBER() OVER(ORDER BY ' + @orderBy + ') AS row, *
+                            FROM    ' + @tablename + '
+                            WHERE   ' + @filter + '
+                          ) AS tbl
+                  WHERE
+                          row > ' + CONVERT(varchar(9), @lbound) + ' AND
+                          row < ' + CONVERT(varchar(9), @ubound)
+    EXEC (@STMT)                 -- return requested records 
+  END
